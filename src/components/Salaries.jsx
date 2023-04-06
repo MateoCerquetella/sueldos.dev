@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { Card, Title, Text, Grid, Col, BadgeDelta, Flex } from '@tremor/react'
 import { Container } from '@/components/Container'
 import { BarChartComponent } from './BarChart'
@@ -31,7 +32,45 @@ const calculateSalariesByGenderAndExperience = ({ averageSalaries }) => {
   })
 }
 
+function useActiveSection(sections) {
+  const [activeSection, setActiveSection] = useState('');
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    sections.forEach((section) => {
+      const sectionElement = document.getElementById(section);
+      if (sectionElement) {
+        observer.observe(sectionElement);
+      }
+    });
+
+    return () => {
+      sections.forEach((section) => {
+        const sectionElement = document.getElementById(section);
+        if (sectionElement) {
+          observer.unobserve(sectionElement);
+        }
+      });
+    };
+  }, [sections]);
+
+  return activeSection;
+}
+
+
 export function Salaries ({ averageSalaries, count }) {
+  const activeSection = useActiveSection(['salaries-general', 'salaries-users', 'salaries-filter']);
+
   return (
     <section
       id='sueldos'
@@ -46,7 +85,7 @@ export function Salaries ({ averageSalaries, count }) {
           <small className='block text-center opacity-80'>Basado en un total de {count.total} sueldos anónimos</small>
         </header>
 
-        <SalariesTabs />
+        <SalariesTabs activeSection={activeSection} />
 
         <SalariesSectionTitle id='salaries-general' icon={<IconCash />} title='Resultados generales' />
 
