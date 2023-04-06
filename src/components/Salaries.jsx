@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import { Card, Title, Text, Grid, Col, BadgeDelta, Flex } from '@tremor/react'
 import { Container } from '@/components/Container'
 import { BarChartComponent } from './BarChart'
@@ -21,55 +21,60 @@ const calculateSalariesByGenderAndExperience = ({ averageSalaries }) => {
     senior: 'Senior'
   }
 
-  return Object.entries({ all: gender, ...genderAndExperience }).map(([key, gender]) => {
-    const experienceKey = experienceDictionary[key] ?? 'Todos'
+  return Object.entries({ all: gender, ...genderAndExperience }).map(
+    ([key, gender]) => {
+      const experienceKey = experienceDictionary[key] ?? 'Todos'
 
-    return {
-      Experiencia: experienceKey,
-      Hombre: Math.round(gender.man),
-      Mujer: Math.round(gender.woman)
+      return {
+        Experiencia: experienceKey,
+        Hombre: Math.round(gender.man),
+        Mujer: Math.round(gender.woman)
+      }
     }
-  })
+  )
 }
 
-function useActiveSection(sections) {
-  const [activeSection, setActiveSection] = useState('');
+function useActiveSection (sections) {
+  const [activeSection, setActiveSection] = useState('')
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+            setActiveSection(entry.target.id)
           }
-        });
+        })
       },
       { threshold: 0.5 }
-    );
+    )
 
     sections.forEach((section) => {
-      const sectionElement = document.getElementById(section);
+      const sectionElement = document.getElementById(section)
       if (sectionElement) {
-        observer.observe(sectionElement);
+        observer.observe(sectionElement)
       }
-    });
+    })
 
     return () => {
       sections.forEach((section) => {
-        const sectionElement = document.getElementById(section);
+        const sectionElement = document.getElementById(section)
         if (sectionElement) {
-          observer.unobserve(sectionElement);
+          observer.unobserve(sectionElement)
         }
-      });
-    };
-  }, [sections]);
+      })
+    }
+  }, [sections])
 
-  return activeSection;
+  return activeSection
 }
 
-
 export function Salaries ({ averageSalaries, count }) {
-  const activeSection = useActiveSection(['salaries-general', 'salaries-users', 'salaries-filter']);
+  const activeSection = useActiveSection([
+    'salaries-general',
+    'salaries-users',
+    'salaries-filter'
+  ])
 
   return (
     <section
@@ -82,12 +87,18 @@ export function Salaries ({ averageSalaries, count }) {
           <h2 className='flex items-center justify-center max-w-4xl mx-auto text-3xl font-medium tracking-tight font-display text-slate-900 sm:text-5xl gap-x-2'>
             Salarios en España <SpainFlag />
           </h2>
-          <small className='block text-center opacity-80'>Basado en un total de {count.total} sueldos anónimos</small>
+          <small className='block text-center opacity-80'>
+            Basado en un total de {count.total} sueldos anónimos
+          </small>
         </header>
 
         <SalariesTabs activeSection={activeSection} />
 
-        <SalariesSectionTitle id='salaries-general' icon={<IconCash />} title='Resultados generales' />
+        <SalariesSectionTitle
+          id='salaries-general'
+          icon={<IconCash />}
+          title='Resultados generales'
+        />
 
         <Grid numColsLg={6} className='gap-6 mt-6 mb-6'>
           <Col numColSpanLg={4}>
@@ -103,11 +114,16 @@ export function Salaries ({ averageSalaries, count }) {
               <Card className='flex-1'>
                 <div className='flex flex-col items-center justify-center h-full'>
                   <Title className='text-center'>Sueldo medio anual</Title>
-                  <Text className='text-6xl font-bold text-center text-green-900'>{formatNumberToEur(averageSalaries.total)}</Text>
+                  <Text className='text-6xl font-bold text-center text-green-900'>
+                    {formatNumberToEur(averageSalaries.total)}
+                  </Text>
                   <Flex justifyContent='center' className='mt-4 space-x-2'>
                     <BadgeDelta deltaType='moderateIncrease' />
                     <Text className='font-semibold text-green-700'>+7200€</Text>
-                    <Text className='truncate'> que el sueldo medio del país</Text>
+                    <Text className='truncate'>
+                      {' '}
+                      que el sueldo medio del país
+                    </Text>
                   </Flex>
                 </div>
               </Card>
